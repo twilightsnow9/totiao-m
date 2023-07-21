@@ -4,6 +4,9 @@ import router from './router'
 import store from './store'
 import Vant from 'vant'
 import 'vant/lib/index.css'
+//使用动态设置 REM 基准值（html 标签的字体大小）
+import 'amfe-flexible'
+import "@/style/icon.less"
 
 Vue.use(Vant)
 

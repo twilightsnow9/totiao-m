@@ -1,7 +1,7 @@
 <template>
   <div id="app">
+    
     <!-- 路由出口 -->
-
     <router-view/>
   </div>
 </template>
@@ -13,5 +13,7 @@ export default {
 
 </script>
 <style lang="less">
-
+  p{
+    font-size: 10px;
+  }
 </style>
