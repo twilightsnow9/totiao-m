@@ -12,8 +12,7 @@ export default {
 }
 
 </script>
+
 <style lang="less">
-  p{
-    font-size: 10px;
-  }
+
 </style>
