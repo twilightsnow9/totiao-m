@@ -8,6 +8,7 @@ import 'vant/lib/index.css'
 //使用动态设置 REM 基准值（html 标签的字体大小）
 import 'amfe-flexible'
 import "@/style/icon.less"
+import './utils/dayjs'
 
 // 加载全局样式
 import '@/style/index.less'

@@ -11,6 +11,7 @@
       validate-first
       :show-error="false"
       :show-error-message="false"
+      ref="login_form"
       @submit="onLogin"
       @failed="onFailed"
     >
@@ -18,6 +19,8 @@
         v-model="user.mobile"
         left-icon="phone-o"
         placeholder="请输入手机号"
+        name="mobile"
+        center
         :rules="formRules.mobile"
       />
       <van-field
@@ -25,12 +28,29 @@
         clearable
         left-icon="description"
         placeholder="请输入验证码"
+        name="code"
+        center
         :rules="formRules.code"
       >
         <template #button>
-          <van-button class="send-btn" size="small" round
-            >发送验证码</van-button
+          <van-count-down
+            v-if="isCountDownShow"
+            :time="1000 * 60" 
+            format="ss s"
+            @finish="isCountDownShow = false"
+          />
+          <!-- @finish="isCountDownShow = false"隐藏倒计时显示发送按钮 -->
+          <!-- @click.prevent 阻止默认行为 -->
+          <van-button
+            v-else
+            :loading="isSendSmsLoading"
+            class="send-btn" 
+            size="small" 
+            round 
+            @click.prevent="onSendSms"
           >
+            发送验证码
+          </van-button>
         </template>
       </van-field>
       <!-- 登陆 -->
@@ -42,7 +62,7 @@
 </template>
 
 <script>
-import { login } from "@/api/user";
+import { login, sendSms } from "@/api/user";
 
 export default {
   name: "loginIndex",
@@ -61,7 +81,9 @@ export default {
           { required: true, message: '请输入验证码' },
           {pattern:/^\d{6}$/, message:'验证码格式错误'}
         ],
-      }
+      },
+      isCountDownShow : false ,//控制倒计时和发送按钮的显示状态，
+      isSendSmsLoading : false
     };
   },
   methods: {
@@ -81,10 +103,11 @@ export default {
       // 请求调用登录
       // console.log(this.user);
       try {
-        const res = await login(this.user);
+        const {data} = await login(this.user);
         this.$toast("登录成功");
         // 处理响应结果
-        console.log(res);
+        this.$store.commit('setUser', data.data)
+        this.$router.back() //
       } catch (error) {
         console.log(error);
         this.$toast.fail("登录失败,手机号或密码输入不正确");
@@ -97,9 +120,39 @@ export default {
       if(error.errors[0]) {
         this.$toast({
           message : error.errors[0].message,
-          position: 'top'
+          position: 'top' //防止手机键盘太高看不见
         })
       }
+    },
+    async onSendSms() {
+      try {
+        // 校验手机号
+        await this.$refs['login_form'].validate('mobile')
+        this.isSendSmsLoading = true //显示按钮的loading状态，防止网络慢用户对此点击
+        await sendSms(this.user.mobile)
+        // 显示倒计时
+
+        this.isCountDownShow = true
+      } catch (error) {
+        let message = ''
+        // try的任何代码错误都会进入catch
+        if (error && error.response && error.response.status === 429) {
+          message = '发送太频繁了,请稍后重试'
+        } else if (error.name === 'mobile') {
+          // 表单验证失败错误提示
+          message = error.message
+        } else {
+          message = '发送失败,请稍后重试'
+        }
+        this.$toast({
+          message,
+          position: 'top' //防止手机键盘太高看不见
+        })
+      }
+      // 无论发送验证码是否成功都要关闭loading状态
+      this.isSendSmsLoading = false
+      // 校验手机号
+      // 验证通过 -> 请求发送验证码 -> 显示倒计时 -> 隐藏发送按钮
     }
   },
 };
