@@ -10,6 +10,8 @@ import 'amfe-flexible'
 import "@/style/icon.less"
 import './utils/dayjs'
 
+import './mock'
+
 // 加载全局样式
 import '@/style/index.less'
 

@@ -11,7 +11,6 @@ export const getItem = (name) => {
     return data
     // data不是json 原样返回
   }
-  
 }
 export const setItem = (name,value) => {
   // 如果value是对象就把value转换为json

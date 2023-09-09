@@ -25,7 +25,6 @@
             </van-tab>
 
             <div slot="nav-right" class="wap-nav-placeholder"></div>
-                    <!-- 按钮 -->
             <div 
                 slot="nav-right"
                 @click="isChannelEditShow = true"
@@ -130,6 +129,7 @@ export default {
         }
         .channel-tabs {
             /deep/ .van-tab {
+                width: 95px;
                 border-right: 1px solid #edeff3;
                 border-bottom: 1px solid #edeff3;
             }

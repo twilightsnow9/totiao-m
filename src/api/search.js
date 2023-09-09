@@ -15,3 +15,23 @@ export const getSearchSuggesstions = q => {
     }
   })
 }
+// 获取搜索结果
+/**
+ * 获取搜索结果
+ */
+export function getSearchResult(params) {
+  return request({
+    method: "GET",
+    url: "/v1_0/search",
+    params
+  })
+}
+/**
+ * 获取搜索历史
+ */
+// export const getSearchHistories = () => {
+//   return request({
+//     method: "GET",
+//     url: "/v1_0/search/history",
+//   })
+// }

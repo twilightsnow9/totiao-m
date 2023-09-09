@@ -77,7 +77,6 @@ export default {
   methods: {
     async loadAllChannels () {
       const { data } = await getAllChannels()
-      console.log(data);
       this.allChannels = data.data.channels
     },
     async onAdd (channel) {
@@ -108,7 +107,7 @@ export default {
       // 非编辑状态，切换频道
     },
     async deleteChannel (channel,index) {
-      console.log('删除频道');
+      // 删除频道
       if (index <= this.active) {
         this.$emit('updataActive',this.active -1)
       }
